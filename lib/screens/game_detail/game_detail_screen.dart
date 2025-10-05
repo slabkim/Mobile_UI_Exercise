@@ -10,7 +10,7 @@ class GameDetailScreen extends StatelessWidget {
   final Game game;
 
   /// Membuat widget GameDetailScreen.
-  const GameDetailScreen({Key? key, required this.game}) : super(key: key);
+  const GameDetailScreen({super.key, required this.game});
 
   @override
   Widget build(BuildContext context) {
@@ -76,7 +76,7 @@ class GameDetailScreen extends StatelessWidget {
                       },
                 child: Text(
                   isInLibrary
-                      ? AppConstants.addToLibraryButton + ' (Added)'
+                      ? '${AppConstants.addToLibraryButton} (Added)'
                       : AppConstants.addToLibraryButton,
                 ),
               ),

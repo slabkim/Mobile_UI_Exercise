@@ -9,7 +9,7 @@ import '../game_detail/game_detail_screen.dart';
 /// Layar library menampilkan daftar permainan yang ditambahkan oleh pengguna.
 /// Menampilkan pesan jika library kosong.
 class LibraryScreen extends StatelessWidget {
-  const LibraryScreen({Key? key}) : super(key: key);
+  const LibraryScreen({super.key});
 
   @override
   Widget build(BuildContext context) {

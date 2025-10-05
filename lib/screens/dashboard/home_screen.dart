@@ -7,7 +7,7 @@ import '../game_detail/game_detail_screen.dart';
 /// Layar beranda menampilkan daftar horizontal kategori permainan:
 /// "Rekomendasi untuk Anda", "Sedang Trending", dan "Genre Populer".
 class HomeScreen extends StatelessWidget {
-  const HomeScreen({Key? key}) : super(key: key);
+  const HomeScreen({super.key});
 
   // Data dummy untuk game
   static final List<Game> recommendedGames = [

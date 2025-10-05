@@ -10,8 +10,7 @@ class GameItemCard extends StatelessWidget {
   /// Callback saat kartu pencet.
   final VoidCallback? onTap;
 
-  const GameItemCard({Key? key, required this.game, this.onTap})
-    : super(key: key);
+  const GameItemCard({super.key, required this.game, this.onTap});
 
   @override
   Widget build(BuildContext context) {

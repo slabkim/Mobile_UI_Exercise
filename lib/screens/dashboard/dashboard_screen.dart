@@ -7,7 +7,7 @@ import 'profile_screen.dart';
 /// Layar dasbor dengan BottomNavigationBar dan IndexedStack untuk mempertahankan status.
 /// Berisi tab Beranda, library, dan Profil.
 class DashboardScreen extends StatefulWidget {
-  const DashboardScreen({Key? key}) : super(key: key);
+  const DashboardScreen({super.key});
 
   @override
   State<DashboardScreen> createState() => _DashboardScreenState();

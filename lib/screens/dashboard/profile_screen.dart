@@ -6,8 +6,7 @@ import '../auth/login_page.dart';
 
 /// Profile screen displaying user information and a logout button.
 class ProfileScreen extends StatelessWidget {
-  /// Creates a ProfileScreen widget.
-  const ProfileScreen({Key? key}) : super(key: key);
+  const ProfileScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
