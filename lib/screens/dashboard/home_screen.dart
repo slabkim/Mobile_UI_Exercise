@@ -1,137 +1,148 @@
 import 'package:flutter/material.dart';
-import '../../constants/app_constants.dart';
+
 import '../../models/game.dart';
+import '../../models/game_category.dart';
+import '../../services/game_service.dart';
 import '../../widgets/game_item_card.dart';
+import '../../widgets/loading_indicator.dart';
 import '../game_detail/game_detail_screen.dart';
 
-/// Layar beranda menampilkan daftar horizontal kategori permainan:
-/// "Rekomendasi untuk Anda", "Sedang Trending", dan "Genre Populer".
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
-  // Data dummy untuk game
-  static final List<Game> recommendedGames = [
-    Game(
-      id: '1',
-      title: 'Epic Adventure',
-      description: 'An epic adventure game with stunning visuals.',
-      genre: 'Adventure',
-      rating: 4.5,
-      developer: 'Game Studio A',
-      imageUrl: AppConstants.defaultGameImage,
-    ),
-    Game(
-      id: '2',
-      title: 'Space Shooter',
-      description: 'Fast-paced space shooting game.',
-      genre: 'Shooter',
-      rating: 4.2,
-      developer: 'Game Studio B',
-      imageUrl: AppConstants.defaultGameImage,
-    ),
-  ];
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
 
-  static final List<Game> trendingGames = [
-    Game(
-      id: '3',
-      title: 'Puzzle Master',
-      description: 'Challenging puzzles for all ages.',
-      genre: 'Puzzle',
-      rating: 4.7,
-      developer: 'Game Studio C',
-      imageUrl: AppConstants.defaultGameImage,
-    ),
-    Game(
-      id: '4',
-      title: 'Racing Pro',
-      description: 'High-speed racing game with realistic physics.',
-      genre: 'Racing',
-      rating: 4.3,
-      developer: 'Game Studio D',
-      imageUrl: AppConstants.defaultGameImage,
-    ),
-  ];
+class _HomeScreenState extends State<HomeScreen> {
+  Future<List<GameCategory>>? _categoriesFuture;
 
-  static final List<Game> popularGenres = [
-    Game(
-      id: '5',
-      title: 'Fantasy RPG',
-      description: 'Role-playing game set in a fantasy world.',
-      genre: 'RPG',
-      rating: 4.6,
-      developer: 'Game Studio E',
-      imageUrl: AppConstants.defaultGameImage,
-    ),
-    Game(
-      id: '6',
-      title: 'Strategy King',
-      description: 'Strategic gameplay with multiple levels.',
-      genre: 'Strategy',
-      rating: 4.4,
-      developer: 'Game Studio F',
-      imageUrl: AppConstants.defaultGameImage,
-    ),
-  ];
+  @override
+  void initState() {
+    super.initState();
+    _categoriesFuture = GameService.fetchCategories();
+  }
 
-  Widget _buildCategorySection(
-    BuildContext context,
-    String title,
-    List<Game> games,
-  ) {
+  Widget _sectionHeader(BuildContext context, String title, String subtitle) {
+    final theme = Theme.of(context);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-          child: Text(
-            title,
-            style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+        Text(
+          title,
+          style: theme.textTheme.titleLarge?.copyWith(
+            fontWeight: FontWeight.w700,
           ),
         ),
-        SizedBox(
-          height: 240,
-          child: ListView.builder(
-            scrollDirection: Axis.horizontal,
-            itemCount: games.length,
-            itemBuilder: (context, index) {
-              final game = games[index];
-              return Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 8),
-                child: GameItemCard(
-                  game: game,
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (_) => GameDetailScreen(game: game),
-                      ),
-                    );
-                  },
-                ),
-              );
-            },
-          ),
+        const SizedBox(height: 4),
+        Text(
+          subtitle,
+          style: theme.textTheme.bodySmall?.copyWith(color: Colors.grey[600]),
         ),
       ],
     );
   }
 
+  Widget _buildCarousel(BuildContext context, {required List<Game> games}) {
+    if (games.isEmpty) {
+      return const SizedBox(
+        height: 240,
+        child: Center(child: Text('No games available')),
+      );
+    }
+
+    return SizedBox(
+      height: 240,
+      child: ListView.separated(
+        padding: const EdgeInsets.symmetric(horizontal: 4),
+        scrollDirection: Axis.horizontal,
+        itemBuilder: (context, index) {
+          final game = games[index];
+          return GameItemCard(
+            game: game,
+            showAction: false,
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (_) => GameDetailScreen(game: game)),
+              );
+            },
+          );
+        },
+        separatorBuilder: (_, __) => const SizedBox(width: 16),
+        itemCount: games.length,
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    return ListView(
-      children: [
-        _buildCategorySection(
-          context,
-          AppConstants.recommendedForYou,
-          recommendedGames,
-        ),
-        _buildCategorySection(context, AppConstants.trendingNow, trendingGames),
-        _buildCategorySection(
-          context,
-          AppConstants.popularGenres,
-          popularGenres,
-        ),
-      ],
+    return FutureBuilder<List<GameCategory>>(
+      future: _categoriesFuture,
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Center(child: LoadingIndicator());
+        }
+
+        if (snapshot.hasError) {
+          return Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(Icons.error_outline, size: 64, color: Colors.grey[400]),
+                const SizedBox(height: 16),
+                Text(
+                  'Error loading games',
+                  style: Theme.of(context).textTheme.titleMedium,
+                ),
+                const SizedBox(height: 8),
+                Text(
+                  snapshot.error.toString(),
+                  style: Theme.of(
+                    context,
+                  ).textTheme.bodyMedium?.copyWith(color: Colors.grey[600]),
+                  textAlign: TextAlign.center,
+                ),
+                const SizedBox(height: 16),
+                ElevatedButton(
+                  onPressed: () {
+                    setState(() {
+                      _categoriesFuture = GameService.fetchCategories();
+                    });
+                  },
+                  child: const Text('Retry'),
+                ),
+              ],
+            ),
+          );
+        }
+
+        final categories = snapshot.data ?? [];
+        if (categories.isEmpty) {
+          return const Center(child: Text('No categories available'));
+        }
+
+        final children = <Widget>[];
+        for (final category in categories) {
+          if (children.isNotEmpty) {
+            children.add(const SizedBox(height: 32));
+          }
+          children.addAll([
+            _sectionHeader(
+              context,
+              category.title,
+              category.subtitle,
+            ),
+            const SizedBox(height: 16),
+            _buildCarousel(context, games: category.games),
+          ]);
+        }
+
+        return ListView(
+          padding: const EdgeInsets.fromLTRB(16, 16, 16, 24),
+          children: children,
+        );
+      },
     );
   }
 }

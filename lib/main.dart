@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'constants/app_constants.dart';
+import 'constants/app_theme.dart';
 import 'providers/auth_provider.dart';
 import 'providers/library_provider.dart';
-import 'screens/auth/login_page.dart';
+import 'screens/splash/splash_screen.dart';
 
 /// Main entry point of the application.
 void main() {
@@ -24,11 +25,9 @@ class MyApp extends StatelessWidget {
       ],
       child: MaterialApp(
         title: AppConstants.appName,
-        theme: ThemeData(
-          colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-          useMaterial3: true,
-        ),
-        home: const LoginPage(),
+        debugShowCheckedModeBanner: false,
+        theme: AppTheme.lightTheme(),
+        home: const SplashScreen(),
       ),
     );
   }

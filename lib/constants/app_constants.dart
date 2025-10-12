@@ -2,25 +2,41 @@
 /// Berkas ini memusatkan semua nilai konstanta yang digunakan di seluruh aplikasi untuk memudahkan pemeliharaan.
 class AppConstants {
   // App-wide strings
-  static const String appName = 'Game Collection';
-  static const String loginTitle = 'Login';
-  static const String registerTitle = 'Register';
+  static const String appName = 'PauseStore';
+  static const String appTagline =
+      'Temukan game favoritmu seperti di Play Store';
+  static const String loginTitle = 'Masuk';
+  static const String loginHeadline = 'Selamat datang kembali';
+  static const String loginSubtitle =
+      'Masuk untuk melanjutkan progres dan jelajahi rilisan terbaru.';
+  static const String registerTitle = 'Daftar';
+  static const String registerHeadline = 'Bergabung dengan PauseStore';
+  static const String registerSubtitle =
+      'Buat akunmu agar tidak ketinggalan update dan rekomendasi personal.';
   static const String dashboardTitle = 'Dashboard';
-  static const String homeTitle = 'Home';
-  static const String libraryTitle = 'Library';
-  static const String profileTitle = 'Profile';
-  static const String gameDetailTitle = 'Game Details';
+  static const String homeTitle = 'Beranda';
+  static const String libraryTitle = 'Koleksi';
+  static const String librarySubtitle =
+      'Kelola game yang sudah kamu simpan dan lanjutkan petualanganmu.';
+  static const String profileTitle = 'Profil';
+  static const String profileGreeting = 'Hai,';
+  static const String profileTagline =
+      'Kelola akun dan personalisasimu di sini.';
+  static const String gameDetailTitle = 'Detail Game';
+  static const String splashHeadline = 'PauseStore';
+  static const String splashSubtitle =
+      'Temukan game terbaik dengan feel Google Play';
 
   // Button texts
-  static const String loginButton = 'Login';
-  static const String registerButton = 'Register';
-  static const String logoutButton = 'Logout';
-  static const String addToLibraryButton = 'Add to Library';
-  static const String removeButton = 'Remove';
+  static const String loginButton = 'Masuk';
+  static const String registerButton = 'Buat Akun';
+  static const String logoutButton = 'Keluar';
+  static const String addToLibraryButton = 'Tambah ke Koleksi';
+  static const String removeButton = 'Hapus';
 
   // Link texts
-  static const String noAccountLink = 'Belum punya akun? Register';
-  static const String haveAccountLink = 'Sudah punya akun? Login';
+  static const String noAccountLink = 'Belum punya akun? Daftar sekarang';
+  static const String haveAccountLink = 'Sudah punya akun? Masuk di sini';
 
   // Error messages
   static const String loginFailed = 'Login gagal. Periksa email dan password.';
@@ -45,9 +61,11 @@ class AppConstants {
   static const String nameHint = 'Masukkan nama';
 
   // Game categories
-  static const String recommendedForYou = 'Rekomendasi untuk Anda';
-  static const String trendingNow = 'Sedang Trending';
-  static const String popularGenres = 'Genre Populer';
+  static const String recommendedForYou = 'Untuk kamu';
+  static const String trendingNow = 'Trending saat ini';
+  static const String popularGenres = 'Genre populer';
+  static const String topCharts = 'Top chart';
+  static const String newUpdates = 'Update terbaru';
 
   // Library messages
   static const String emptyLibraryMessage =
