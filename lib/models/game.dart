@@ -1,25 +1,24 @@
-/// Kelas model yang merepresentasikan game dalam aplikasi.
-/// Berisi semua informasi penting tentang game, termasuk judul, deskripsi, genre, dll.
+/// Model game dengan informasi detail
 class Game {
-  /// The unique identifier for the game
+  /// ID unik game
   final String id;
 
-  /// The title of the game
+  /// Judul game
   final String title;
 
-  /// A brief description of the game
+  /// Deskripsi singkat game
   final String description;
 
-  /// The genre of the game
+  /// Genre game
   final String genre;
 
-  /// The rating of the game
+  /// Rating game
   final double rating;
 
-  /// The developer of the game
+  /// Developer game
   final String developer;
 
-  /// URL atau jalur ke gambar cover game
+  /// URL gambar cover game
   final String imageUrl;
 
   /// Constructor untuk membuat instance Game
@@ -33,7 +32,7 @@ class Game {
     required this.imageUrl,
   });
 
-  /// Membuat instance Game dari map JSON
+  /// Konversi dari JSON ke Game
   factory Game.fromJson(Map<String, dynamic> json) {
     return Game(
       id: json['id'] as String,
@@ -46,7 +45,7 @@ class Game {
     );
   }
 
-  /// Mengonversi instance Game ke map JSON
+  /// Konversi Game ke JSON
   Map<String, dynamic> toJson() {
     return {
       'id': id,
@@ -59,7 +58,7 @@ class Game {
     };
   }
 
-  /// Membuat salinan Game dengan nilai baru opsional
+  /// Duplikat Game dengan nilai baru opsional
   Game copyWith({
     String? id,
     String? title,
@@ -80,17 +79,20 @@ class Game {
     );
   }
 
+  /// Tampilkan info game
   @override
   String toString() {
     return 'Game(id: $id, title: $title, genre: $genre, rating: $rating)';
   }
 
+  /// Bandingkan dua game berdasarkan ID
   @override
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
     return other is Game && other.id == id;
   }
 
+  /// Hash code berdasarkan ID
   @override
   int get hashCode => id.hashCode;
 }

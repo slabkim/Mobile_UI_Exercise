@@ -3,11 +3,9 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 
 import '../../constants/app_constants.dart';
-import '../../constants/app_theme.dart';
 import '../auth/login_page.dart';
 
-/// Simple splash screen inspired by Google Play Store entrance experience.
-/// Displays brand identity before navigating to the authentication flow.
+/// Halaman splash screen yang ditampilkan saat aplikasi dimulai
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
 
@@ -15,25 +13,15 @@ class SplashScreen extends StatefulWidget {
   State<SplashScreen> createState() => _SplashScreenState();
 }
 
-class _SplashScreenState extends State<SplashScreen>
-    with SingleTickerProviderStateMixin {
-  late final AnimationController _controller;
-  late final Animation<double> _scaleAnimation;
+class _SplashScreenState extends State<SplashScreen> {
+  /// Timer untuk navigasi ke halaman login setelah delay
   Timer? _timer;
 
   @override
   void initState() {
     super.initState();
-    _controller = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 2000),
-    )..forward();
 
-    _scaleAnimation = CurvedAnimation(
-      parent: _controller,
-      curve: Curves.easeOutBack,
-    );
-
+    /// Navigasi ke login page setelah 2 detik
     _timer = Timer(const Duration(seconds: 2), () {
       if (!mounted) return;
       Navigator.of(
@@ -44,97 +32,86 @@ class _SplashScreenState extends State<SplashScreen>
 
   @override
   void dispose() {
+    /// Batalkan timer saat widget dispose
     _timer?.cancel();
-    _controller.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
     return Scaffold(
       body: Container(
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            colors: [
-              AppTheme.primaryColor,
-              Color(0xFF0B8E65),
-              Color(0xFF12B886),
-            ],
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-          ),
-        ),
+        /// Background putih simple
+        color: Colors.white,
         child: SafeArea(
           child: Center(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                ScaleTransition(
-                  scale: _scaleAnimation,
-                  child: Container(
-                    padding: const EdgeInsets.all(24),
-                    decoration: BoxDecoration(
-                      color: Colors.white.withOpacity(0.08),
-                      borderRadius: BorderRadius.circular(24),
-                      border: Border.all(
-                        color: Colors.white.withOpacity(0.15),
-                        width: 1,
-                      ),
-                    ),
-                    child: const Icon(
-                      Icons.play_circle_fill_rounded,
-                      size: 96,
-                      color: Colors.white,
-                    ),
-                  ),
+                /// Logo aplikasi dengan ikon
+                const Icon(
+                  Icons.play_circle_fill_rounded,
+                  size: 80,
+                  color: Colors.black87,
                 ),
                 const SizedBox(height: 32),
+
+                /// Judul aplikasi
                 Text(
                   AppConstants.splashHeadline,
                   style: Theme.of(context).textTheme.headlineMedium?.copyWith(
                     fontWeight: FontWeight.w700,
-                    color: Colors.white,
-                    letterSpacing: 0.5,
+                    color: Colors.black87,
                   ),
                 ),
                 const SizedBox(height: 12),
-                Text(
-                  AppConstants.splashSubtitle,
-                  textAlign: TextAlign.center,
-                  style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                    color: Colors.white70,
-                    fontWeight: FontWeight.w500,
+
+                /// Subtitle aplikasi
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 32),
+                  child: Text(
+                    AppConstants.splashSubtitle,
+                    textAlign: TextAlign.center,
+                    style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                      color: Colors.grey[600],
+                      fontWeight: FontWeight.w500,
+                    ),
                   ),
                 ),
                 const SizedBox(height: 48),
+
+                /// Loading progress bar
                 SizedBox(
                   width: 120,
                   child: LinearProgressIndicator(
-                    color: Colors.white,
-                    backgroundColor: Colors.white24,
+                    color: Colors.black87,
+                    backgroundColor: Colors.grey[300],
                     borderRadius: BorderRadius.circular(12),
                   ),
                 ),
                 const SizedBox(height: 16),
+
+                /// Teks loading
                 Text(
                   'Mengoptimalkan pengalamanmu...',
                   style: Theme.of(
                     context,
-                  ).textTheme.bodySmall?.copyWith(color: Colors.white60),
+                  ).textTheme.bodySmall?.copyWith(color: Colors.grey[600]),
                 ),
               ],
             ),
           ),
         ),
       ),
+
+      /// Footer dengan branding
       bottomNavigationBar: Padding(
         padding: const EdgeInsets.symmetric(vertical: 24),
         child: Text(
           'Powered by PauseStore',
           textAlign: TextAlign.center,
           style: Theme.of(context).textTheme.bodySmall?.copyWith(
-            color: colorScheme.onPrimary.withOpacity(0.7),
+            color: Colors.grey[600],
             letterSpacing: 0.4,
           ),
         ),

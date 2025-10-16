@@ -1,41 +1,43 @@
-/// Kelas model yang mewakili pengguna dalam aplikasi.
-/// Berisi informasi pengguna seperti nama dan email.
+/// Model pengguna dengan nama dan email
 class User {
-  /// user full name
+  /// Nama lengkap pengguna
   final String name;
 
-  /// user email address
+  /// Email pengguna
   final String email;
 
-  /// Constructor untuk membuat instance Pengguna
+  /// Constructor untuk membuat instance User
   const User({required this.name, required this.email});
 
-  /// Membuat instance Pengguna dari peta JSON
+  /// Konversi dari JSON ke User
   factory User.fromJson(Map<String, dynamic> json) {
     return User(name: json['name'] as String, email: json['email'] as String);
   }
 
-  /// Mengonversi instance Pengguna ke peta JSON
+  /// Konversi User ke JSON
   Map<String, dynamic> toJson() {
     return {'name': name, 'email': email};
   }
 
-  /// Membuat salinan Pengguna dengan nilai baru opsional
+  /// Duplikat User dengan nilai baru opsional
   User copyWith({String? name, String? email}) {
     return User(name: name ?? this.name, email: email ?? this.email);
   }
 
+  /// Tampilkan info user
   @override
   String toString() {
     return 'User(name: $name, email: $email)';
   }
 
+  /// Bandingkan dua user berdasarkan nama dan email
   @override
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
     return other is User && other.name == name && other.email == email;
   }
 
+  /// Hash code berdasarkan nama dan email
   @override
   int get hashCode => name.hashCode ^ email.hashCode;
 }

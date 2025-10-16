@@ -1,17 +1,17 @@
 import 'game.dart';
 
-/// Represents a curated group of apps that share the same theme.
+/// Model kategori game dengan judul dan daftar game
 class GameCategory {
-  /// Unique identifier for the category.
+  /// ID unik kategori
   final String id;
 
-  /// Display title for the category.
+  /// Judul kategori
   final String title;
 
-  /// Short description that explains the category focus.
+  /// Deskripsi singkat kategori
   final String subtitle;
 
-  /// Collection of apps that belong to this category.
+  /// Daftar game dalam kategori
   final List<Game> games;
 
   const GameCategory({

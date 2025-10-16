@@ -2,14 +2,27 @@ import 'package:flutter/material.dart';
 
 import '../models/game.dart';
 
+/// Enum untuk menentukan layout kartu game (vertikal atau horizontal)
 enum GameCardLayout { vertical, horizontal }
 
+/// Widget kartu game yang dapat ditampilkan dalam dua layout berbeda
 class GameItemCard extends StatelessWidget {
+  /// Data game yang akan ditampilkan
   final Game game;
+
+  /// Callback saat kartu diklik
   final VoidCallback? onTap;
+
+  /// Callback saat tombol action diklik
   final VoidCallback? onInstallTap;
+
+  /// Layout kartu (vertikal atau horizontal)
   final GameCardLayout layout;
+
+  /// Label untuk tombol action
   final String? actionLabel;
+
+  /// Tampilkan tombol action atau tidak
   final bool showAction;
 
   const GameItemCard({
@@ -22,6 +35,7 @@ class GameItemCard extends StatelessWidget {
     this.showAction = true,
   });
 
+  /// Placeholder gambar saat gagal load
   Widget _imagePlaceholder({double? width, double? height}) {
     return Container(
       width: width,
@@ -31,6 +45,7 @@ class GameItemCard extends StatelessWidget {
     );
   }
 
+  /// Tampilkan rating dengan bintang
   Widget _stars(BuildContext context) {
     return Row(
       mainAxisSize: MainAxisSize.min,
@@ -47,6 +62,7 @@ class GameItemCard extends StatelessWidget {
     );
   }
 
+  /// Bangun tombol action
   Widget _actionButton(BuildContext context) {
     if (!showAction) return const SizedBox.shrink();
 
@@ -65,6 +81,7 @@ class GameItemCard extends StatelessWidget {
     );
   }
 
+  /// Bangun kartu vertikal (grid layout)
   Widget _buildVerticalCard(BuildContext context) {
     return InkWell(
       onTap: onTap,
@@ -72,30 +89,30 @@ class GameItemCard extends StatelessWidget {
       child: SizedBox(
         width: 170,
         child: Card(
+          clipBehavior: Clip.antiAlias,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(16),
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              ClipRRect(
-                borderRadius: const BorderRadius.vertical(
-                  top: Radius.circular(16),
-                ),
-                child: AspectRatio(
-                  aspectRatio: 16 / 9,
-                  child: Image.network(
-                    game.imageUrl,
-                    fit: BoxFit.cover,
-                    errorBuilder: (_, __, ___) => _imagePlaceholder(),
-                  ),
+              /// Gambar game
+              AspectRatio(
+                aspectRatio: 16 / 9,
+                child: Image.network(
+                  game.imageUrl,
+                  fit: BoxFit.cover,
+                  errorBuilder: (_, __, ___) => _imagePlaceholder(),
                 ),
               ),
+
+              /// Info game
               Padding(
                 padding: const EdgeInsets.all(16),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    /// Judul game
                     Text(
                       game.title,
                       style: Theme.of(context).textTheme.titleMedium?.copyWith(
@@ -105,6 +122,8 @@ class GameItemCard extends StatelessWidget {
                       overflow: TextOverflow.ellipsis,
                     ),
                     const SizedBox(height: 6),
+
+                    /// Developer
                     Text(
                       game.developer,
                       style: Theme.of(
@@ -114,6 +133,8 @@ class GameItemCard extends StatelessWidget {
                       overflow: TextOverflow.ellipsis,
                     ),
                     const SizedBox(height: 12),
+
+                    /// Rating
                     _stars(context),
                     if (showAction) ...[
                       const SizedBox(height: 12),
@@ -129,6 +150,7 @@ class GameItemCard extends StatelessWidget {
     );
   }
 
+  /// Bangun kartu horizontal (list layout)
   Widget _buildHorizontalCard(BuildContext context) {
     return InkWell(
       onTap: onTap,
@@ -139,6 +161,7 @@ class GameItemCard extends StatelessWidget {
           padding: const EdgeInsets.all(16),
           child: Row(
             children: [
+              /// Gambar game dengan ukuran kecil
               ClipRRect(
                 borderRadius: BorderRadius.circular(12),
                 child: Image.network(
@@ -151,11 +174,14 @@ class GameItemCard extends StatelessWidget {
                 ),
               ),
               const SizedBox(width: 16),
+
+              /// Info game (expandable)
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisSize: MainAxisSize.min,
                   children: [
+                    /// Judul game
                     Text(
                       game.title,
                       style: Theme.of(context).textTheme.titleMedium?.copyWith(
@@ -165,6 +191,8 @@ class GameItemCard extends StatelessWidget {
                       overflow: TextOverflow.ellipsis,
                     ),
                     const SizedBox(height: 4),
+
+                    /// Developer
                     Text(
                       game.developer,
                       style: Theme.of(
@@ -172,10 +200,14 @@ class GameItemCard extends StatelessWidget {
                       ).textTheme.bodySmall?.copyWith(color: Colors.grey[600]),
                     ),
                     const SizedBox(height: 8),
+
+                    /// Rating
                     _stars(context),
                   ],
                 ),
               ),
+
+              /// Tombol action
               if (showAction) ...[
                 const SizedBox(width: 12),
                 _actionButton(context),
@@ -189,6 +221,7 @@ class GameItemCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    /// Pilih layout berdasarkan enum
     return layout == GameCardLayout.horizontal
         ? _buildHorizontalCard(context)
         : _buildVerticalCard(context);

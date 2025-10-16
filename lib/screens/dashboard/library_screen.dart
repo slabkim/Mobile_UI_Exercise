@@ -6,16 +6,17 @@ import '../../providers/library_provider.dart';
 import '../../widgets/game_item_card.dart';
 import '../game_detail/game_detail_screen.dart';
 
-/// Layar library menampilkan daftar permainan yang ditambahkan oleh pengguna.
-/// Menampilkan pesan jika library kosong.
+/// Halaman library yang menampilkan daftar game yang disimpan pengguna
 class LibraryScreen extends StatelessWidget {
   const LibraryScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
+    /// Watch library provider untuk update saat ada perubahan
     final libraryProvider = context.watch<LibraryProvider>();
     final List<Game> libraryGames = libraryProvider.libraryGames;
 
+    /// Tampilkan pesan kosong jika library belum ada game
     if (libraryGames.isEmpty) {
       return Center(
         child: Padding(
@@ -23,12 +24,15 @@ class LibraryScreen extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
+              /// Ikon kosong
               Icon(
                 Icons.hourglass_empty_outlined,
                 size: 48,
-                color: Theme.of(context).colorScheme.primary,
+                color: Colors.black,
               ),
               const SizedBox(height: 16),
+
+              /// Judul pesan kosong
               Text(
                 'Koleksi kamu masih kosong',
                 style: Theme.of(
@@ -37,6 +41,8 @@ class LibraryScreen extends StatelessWidget {
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: 8),
+
+              /// Deskripsi pesan kosong
               Text(
                 AppConstants.emptyLibraryMessage,
                 style: Theme.of(
@@ -45,6 +51,8 @@ class LibraryScreen extends StatelessWidget {
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: 16),
+
+              /// Tombol untuk ke halaman home
               TextButton(
                 onPressed: () {
                   ScaffoldMessenger.of(context).showSnackBar(
@@ -55,7 +63,10 @@ class LibraryScreen extends StatelessWidget {
                     ),
                   );
                 },
-                child: const Text('Lihat rekomendasi'),
+                child: const Text(
+                  'Lihat rekomendasi',
+                  style: TextStyle(color: Colors.black),
+                ),
               ),
             ],
           ),
@@ -63,6 +74,7 @@ class LibraryScreen extends StatelessWidget {
       );
     }
 
+    /// Tampilkan list game di library
     return ListView.separated(
       padding: const EdgeInsets.fromLTRB(16, 16, 16, 24),
       itemBuilder: (context, index) {
@@ -71,6 +83,8 @@ class LibraryScreen extends StatelessWidget {
           layout: GameCardLayout.horizontal,
           game: game,
           actionLabel: 'Hapus',
+
+          /// Navigasi ke detail game saat diklik
           onTap: () {
             Navigator.push(
               context,
@@ -79,6 +93,8 @@ class LibraryScreen extends StatelessWidget {
               ),
             );
           },
+
+          /// Hapus game dari library saat tombol ditekan
           onInstallTap: () {
             libraryProvider.removeGame(game);
             ScaffoldMessenger.of(context).showSnackBar(
@@ -91,6 +107,8 @@ class LibraryScreen extends StatelessWidget {
           },
         );
       },
+
+      /// Separator antar item
       separatorBuilder: (_, __) => const SizedBox(height: 16),
       itemCount: libraryGames.length,
     );

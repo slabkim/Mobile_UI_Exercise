@@ -2,15 +2,15 @@ import 'package:flutter/material.dart';
 import '../models/game.dart';
 // import '../constants/app_constants.dart';
 
-/// Penyedia untuk mengelola library game pengguna.
-/// Menangani penambahan, penghapusan game, dan menyediakan daftar game terkini di library.
+/// Provider untuk mengelola library game pengguna
 class LibraryProvider extends ChangeNotifier {
+  /// Daftar game di library
   final List<Game> _libraryGames = [];
 
-  /// Mengembalikan daftar permainan yang tidak dapat diubah di library pengguna.
+  /// Ambil daftar game di library (tidak bisa diubah)
   List<Game> get libraryGames => List.unmodifiable(_libraryGames);
 
-  /// Menambahkan permainan ke library jika belum ditambahkan.
+  /// Tambah game ke library
   void addGame(Game game) {
     if (!_libraryGames.contains(game)) {
       _libraryGames.add(game);
@@ -18,18 +18,18 @@ class LibraryProvider extends ChangeNotifier {
     }
   }
 
-  /// Menghapus permainan dari library.
+  /// Hapus game dari library
   void removeGame(Game game) {
     _libraryGames.remove(game);
     notifyListeners();
   }
 
-  /// Memeriksa apakah suatu permainan sudah ada di library.
+  /// Cek apakah game sudah ada di library
   bool isInLibrary(Game game) {
     return _libraryGames.contains(game);
   }
 
-  /// Menghapus seluruh library.
+  /// Hapus semua game di library
   void clearLibrary() {
     _libraryGames.clear();
     notifyListeners();
