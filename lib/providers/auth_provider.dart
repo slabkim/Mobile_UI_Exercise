@@ -4,35 +4,39 @@ import 'package:flutter/material.dart';
 import '../models/user.dart';
 import '../constants/app_constants.dart';
 
-/// Penyedia untuk mengelola status autentikasi.
-/// Menangani proses masuk, pendaftaran, status pemuatan, pesan kesalahan, dan pengguna saat ini.
+/// Provider untuk mengelola status autentikasi pengguna
 class AuthProvider extends ChangeNotifier {
+  /// User yang sedang login
   User? _user;
+
+  /// Status loading operasi autentikasi
   bool _isLoading = false;
+
+  /// Pesan error terakhir
   String? _errorMessage;
 
-  /// Mengembalikan pengguna yang saat ini diautentikasi, atau null jika tidak masuk.
+  /// Ambil user saat ini
   User? get user => _user;
 
-  /// Mengembalikan apakah operasi autentikasi sedang berlangsung.
+  /// Ambil status loading
   bool get isLoading => _isLoading;
 
-  /// Mengembalikan pesan kesalahan terakhir, atau null jika tidak ada.
+  /// Ambil pesan error
   String? get errorMessage => _errorMessage;
 
-  /// Mengembalikan apakah pengguna diautentikasi.
+  /// Cek apakah user sudah login
   bool get isAuthenticated => _user != null;
 
-  /// Simulasikan proses masuk dengan email dan kata sandi.
-  /// Mengembalikan true jika masuk berhasil, false jika tidak.
+  /// Login dengan email dan password
+  /// Mengembalikan true jika berhasil, false jika gagal
   Future<bool> login(String email, String password) async {
     _setLoading(true);
     _setErrorMessage(null);
 
-    // Simulasikan delay jaringan
+    /// Simulasi delay jaringan
     await Future.delayed(const Duration(seconds: 2));
 
-    // Validasi dummy: terima jika email cocok dengan email pengguna dummy dan kata sandi cocok dengan kata sandi dummy
+    /// Validasi dummy dengan email dan password dummy
     if (email == AppConstants.dummyUserEmail &&
         password == AppConstants.dummyPassword) {
       _user = User(name: AppConstants.dummyUserName, email: email);
@@ -47,8 +51,8 @@ class AuthProvider extends ChangeNotifier {
     }
   }
 
-  /// Simulasikan proses registrasi dengan nama, email, kata sandi, dan konfirmasi kata sandi.
-  /// Mengembalikan true jika registrasi berhasil, false jika tidak.
+  /// Register dengan nama, email, password, dan konfirmasi password
+  /// Mengembalikan true jika berhasil, false jika gagal
   Future<bool> register(
     String name,
     String email,
@@ -58,10 +62,10 @@ class AuthProvider extends ChangeNotifier {
     _setLoading(true);
     _setErrorMessage(null);
 
-    // Simulasikan penundaan jaringan
+    /// Simulasi delay jaringan
     await Future.delayed(const Duration(seconds: 2));
 
-    // Validasi dummy: kata sandi dan confirmPassword harus cocok, email tidak boleh berupa email pengguna dummy
+    /// Validasi password dan confirmPassword harus sama
     if (password != confirmPassword) {
       _setErrorMessage(AppConstants.passwordMismatch);
       _setLoading(false);
@@ -69,6 +73,7 @@ class AuthProvider extends ChangeNotifier {
       return false;
     }
 
+    /// Cek email tidak boleh email dummy
     if (email == AppConstants.dummyUserEmail) {
       _setErrorMessage(AppConstants.registerFailed);
       _setLoading(false);
@@ -76,24 +81,26 @@ class AuthProvider extends ChangeNotifier {
       return false;
     }
 
-    // Simulasikan pendaftaran yang berhasil
+    /// Registrasi berhasil
     _user = User(name: name, email: email);
     _setLoading(false);
     notifyListeners();
     return true;
   }
 
-  /// Keluar dari pengguna saat ini.
+  /// Logout user saat ini
   void logout() {
     _user = null;
     notifyListeners();
   }
 
+  /// Set status loading
   void _setLoading(bool value) {
     _isLoading = value;
     notifyListeners();
   }
 
+  /// Set pesan error
   void _setErrorMessage(String? message) {
     _errorMessage = message;
     notifyListeners();

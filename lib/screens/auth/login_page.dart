@@ -6,6 +6,7 @@ import '../../providers/auth_provider.dart';
 import '../dashboard/dashboard_screen.dart';
 import 'register_page.dart';
 
+/// Halaman login untuk autentikasi pengguna
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
 
@@ -14,10 +15,16 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+  /// Key untuk validasi form
   final _formKey = GlobalKey<FormState>();
+
+  /// Controller untuk input email
   final _emailController = TextEditingController();
+
+  /// Controller untuk input password
   final _passwordController = TextEditingController();
 
+  /// Bersihkan controller saat halaman ditutup
   @override
   void dispose() {
     _emailController.dispose();
@@ -25,17 +32,24 @@ class _LoginPageState extends State<LoginPage> {
     super.dispose();
   }
 
+  /// Submit form login
   Future<void> _submit() async {
+    /// Validasi form terlebih dahulu
     if (!_formKey.currentState!.validate()) return;
 
+    /// Ambil auth provider dari context
     final authProvider = context.read<AuthProvider>();
+
+    /// Panggil login dengan email dan password
     final success = await authProvider.login(
       _emailController.text.trim(),
       _passwordController.text.trim(),
     );
 
+    /// Cek apakah widget masih mounted
     if (!mounted) return;
 
+    /// Jika login berhasil, navigasi ke dashboard
     if (success) {
       Navigator.pushReplacement(
         context,
@@ -44,6 +58,7 @@ class _LoginPageState extends State<LoginPage> {
       return;
     }
 
+    /// Tampilkan error message jika login gagal
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(authProvider.errorMessage ?? AppConstants.loginFailed),
@@ -53,6 +68,7 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
+    /// Watch auth provider untuk update status loading
     final authProvider = context.watch<AuthProvider>();
 
     return Scaffold(
@@ -66,6 +82,7 @@ class _LoginPageState extends State<LoginPage> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  /// Judul aplikasi
                   Text(
                     AppConstants.appName,
                     style: Theme.of(context).textTheme.titleLarge?.copyWith(
@@ -73,6 +90,8 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                   ),
                   const SizedBox(height: 8),
+
+                  /// Subtitle
                   Text(
                     'Masuk untuk melanjutkan pengalaman bermainmu.',
                     style: Theme.of(
@@ -80,6 +99,8 @@ class _LoginPageState extends State<LoginPage> {
                     ).textTheme.bodyMedium?.copyWith(color: Colors.grey[600]),
                   ),
                   const SizedBox(height: 32),
+
+                  /// Form login
                   Card(
                     child: Padding(
                       padding: const EdgeInsets.all(20),
@@ -87,6 +108,7 @@ class _LoginPageState extends State<LoginPage> {
                         key: _formKey,
                         child: Column(
                           children: [
+                            /// Input email
                             TextFormField(
                               controller: _emailController,
                               keyboardType: TextInputType.emailAddress,
@@ -108,6 +130,8 @@ class _LoginPageState extends State<LoginPage> {
                               },
                             ),
                             const SizedBox(height: 16),
+
+                            /// Input password
                             TextFormField(
                               controller: _passwordController,
                               decoration: const InputDecoration(
@@ -126,6 +150,8 @@ class _LoginPageState extends State<LoginPage> {
                               },
                             ),
                             const SizedBox(height: 24),
+
+                            /// Tombol submit
                             SizedBox(
                               width: double.infinity,
                               child: FilledButton(
@@ -161,6 +187,8 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                   ),
                   const SizedBox(height: 16),
+
+                  /// Link ke halaman register
                   Center(
                     child: TextButton(
                       onPressed: () {

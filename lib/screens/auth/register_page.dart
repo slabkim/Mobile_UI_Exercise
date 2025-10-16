@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+
 import '../../constants/app_constants.dart';
 import '../../providers/auth_provider.dart';
 import '../dashboard/dashboard_screen.dart';
 import 'login_page.dart';
 
-/// Halaman pendaftaran dengan nama, email, kata sandi, konfirmasi masukan kata sandi,
-/// validasi, indikator pemuatan, dan simulasi keberhasilan/kegagalan pendaftaran.
+/// Halaman register untuk membuat akun pengguna baru
 class RegisterPage extends StatefulWidget {
   const RegisterPage({super.key});
 
@@ -15,12 +15,22 @@ class RegisterPage extends StatefulWidget {
 }
 
 class _RegisterPageState extends State<RegisterPage> {
+  /// Key untuk validasi form
   final _formKey = GlobalKey<FormState>();
+
+  /// Controller untuk input nama
   final _nameController = TextEditingController();
+
+  /// Controller untuk input email
   final _emailController = TextEditingController();
+
+  /// Controller untuk input password
   final _passwordController = TextEditingController();
+
+  /// Controller untuk konfirmasi password
   final _confirmPasswordController = TextEditingController();
 
+  /// Bersihkan semua controller saat halaman ditutup
   @override
   void dispose() {
     _nameController.dispose();
@@ -30,10 +40,15 @@ class _RegisterPageState extends State<RegisterPage> {
     super.dispose();
   }
 
+  /// Submit form register
   void _submit() async {
+    /// Validasi form terlebih dahulu
     if (!_formKey.currentState!.validate()) return;
 
+    /// Ambil auth provider dari context
     final authProvider = context.read<AuthProvider>();
+
+    /// Panggil register dengan data form
     final success = await authProvider.register(
       _nameController.text.trim(),
       _emailController.text.trim(),
@@ -41,14 +56,19 @@ class _RegisterPageState extends State<RegisterPage> {
       _confirmPasswordController.text.trim(),
     );
 
+    /// Cek apakah widget masih mounted
     if (success) {
       if (!mounted) return;
+
+      /// Navigasi ke dashboard jika register berhasil
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (_) => const DashboardScreen()),
       );
     } else {
       if (!mounted) return;
+
+      /// Tampilkan error message jika register gagal
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(
@@ -59,15 +79,17 @@ class _RegisterPageState extends State<RegisterPage> {
     }
   }
 
+  /// Bangun header dengan ikon dan teks penjelasan
   Widget _buildHeader(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        /// Container dengan ikon dan teks
         Container(
           padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 14),
           decoration: BoxDecoration(
-            color: colorScheme.primary.withOpacity(0.08),
+            color: colorScheme.primary.withValues(alpha: 0.08),
             borderRadius: BorderRadius.circular(20),
           ),
           child: Row(
@@ -92,7 +114,7 @@ class _RegisterPageState extends State<RegisterPage> {
                   Text(
                     'Akses akunmu di semua perangkat',
                     style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                      color: colorScheme.primary.withOpacity(0.7),
+                      color: colorScheme.primary.withValues(alpha: 0.7),
                     ),
                   ),
                 ],
@@ -101,14 +123,18 @@ class _RegisterPageState extends State<RegisterPage> {
           ),
         ),
         const SizedBox(height: 32),
+
+        /// Judul halaman
         Text(
           AppConstants.registerHeadline,
           style: Theme.of(context).textTheme.headlineMedium?.copyWith(
             fontWeight: FontWeight.w700,
-            color: colorScheme.onBackground,
+            color: colorScheme.onSurface,
           ),
         ),
         const SizedBox(height: 12),
+
+        /// Subtitle penjelasan
         Text(
           AppConstants.registerSubtitle,
           style: Theme.of(
@@ -122,6 +148,7 @@ class _RegisterPageState extends State<RegisterPage> {
 
   @override
   Widget build(BuildContext context) {
+    /// Watch auth provider untuk update status loading
     final authProvider = context.watch<AuthProvider>();
 
     return Scaffold(
@@ -134,8 +161,11 @@ class _RegisterPageState extends State<RegisterPage> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  /// Header dengan ikon dan penjelasan
                   _buildHeader(context),
                   const SizedBox(height: 32),
+
+                  /// Form register
                   Card(
                     child: Padding(
                       padding: const EdgeInsets.fromLTRB(28, 32, 28, 12),
@@ -144,6 +174,7 @@ class _RegisterPageState extends State<RegisterPage> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.stretch,
                           children: [
+                            /// Input nama
                             TextFormField(
                               controller: _nameController,
                               decoration: InputDecoration(
@@ -159,6 +190,8 @@ class _RegisterPageState extends State<RegisterPage> {
                               },
                             ),
                             const SizedBox(height: 18),
+
+                            /// Input email
                             TextFormField(
                               controller: _emailController,
                               decoration: InputDecoration(
@@ -181,6 +214,8 @@ class _RegisterPageState extends State<RegisterPage> {
                               },
                             ),
                             const SizedBox(height: 18),
+
+                            /// Input password
                             TextFormField(
                               controller: _passwordController,
                               decoration: const InputDecoration(
@@ -200,6 +235,8 @@ class _RegisterPageState extends State<RegisterPage> {
                               },
                             ),
                             const SizedBox(height: 18),
+
+                            /// Input konfirmasi password
                             TextFormField(
                               controller: _confirmPasswordController,
                               decoration: const InputDecoration(
@@ -219,6 +256,8 @@ class _RegisterPageState extends State<RegisterPage> {
                               },
                             ),
                             const SizedBox(height: 24),
+
+                            /// Tombol submit
                             FilledButton(
                               onPressed: authProvider.isLoading
                                   ? null
@@ -245,6 +284,8 @@ class _RegisterPageState extends State<RegisterPage> {
                                   : const Text(AppConstants.registerButton),
                             ),
                             const SizedBox(height: 18),
+
+                            /// Tombol register dengan Google
                             OutlinedButton.icon(
                               onPressed: () {
                                 ScaffoldMessenger.of(context).showSnackBar(
@@ -265,6 +306,8 @@ class _RegisterPageState extends State<RegisterPage> {
                     ),
                   ),
                   const SizedBox(height: 20),
+
+                  /// Link ke halaman login
                   Center(
                     child: TextButton(
                       onPressed: () {
@@ -277,6 +320,8 @@ class _RegisterPageState extends State<RegisterPage> {
                     ),
                   ),
                   const SizedBox(height: 16),
+
+                  /// Disclaimer privasi
                   Center(
                     child: Text(
                       'Dengan mendaftar kamu menyetujui kebijakan privasi PauseStore.',
