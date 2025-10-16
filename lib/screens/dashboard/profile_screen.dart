@@ -11,15 +11,6 @@ import '../auth/login_page.dart';
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
 
-  /// Ambil inisial dari nama user
-  String _initials(String name) {
-    final parts = name.trim().split(' ');
-    if (parts.length >= 2) {
-      return (parts[0][0] + parts[1][0]).toUpperCase();
-    }
-    return name.isNotEmpty ? name[0].toUpperCase() : 'U';
-  }
-
   @override
   Widget build(BuildContext context) {
     /// Watch semua provider yang diperlukan
